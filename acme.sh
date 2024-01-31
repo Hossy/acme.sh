@@ -6285,7 +6285,7 @@ _deactivate() {
     fi
     _debug "Trigger validation."
     vtype="$(_getIdType "$_d_domain")"
-    entry="$(echo "$response" | _egrep_o '[^\{]*"type":"'$vtype'"[^\}]*')"
+    entry="$(echo "$response" | sed -n 's#"challenges":\[\([^]]*\)\]#\1#p' | sed 's#\(\}\),\({\)#\1\n\2#' | grep '"type":"'$vtype'"')"
     _debug entry "$entry"
     if [ -z "$entry" ]; then
       _err "Error, can not get domain token $d"
